@@ -256,14 +256,6 @@ for file_dir, dir, files in os.walk('docker_images'):
 
 # PROCESS ALIASES
 
-
-#types = set()
-#names = set()
-#name2type = {}
-#name2attributes = {}
-#channels = set()
-#channel2condition = {}
-
 old_names = names.copy()
 
 while True:
