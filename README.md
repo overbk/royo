@@ -48,7 +48,7 @@ These macros are ultimately preprocessed by the composer `composer.py`, which in
 
 ### `.royo` specification
 
-The top-level dataflow specification is defined in a `.royo` file.
+The top-level dataflow specification is defined in a `.royo` file. We informally discuss its features.
 
 #### Instantiation
 
