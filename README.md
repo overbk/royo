@@ -26,22 +26,24 @@ Docker Compose does not overcome the issues described above. The _computation co
 
 Royo is a language that applies some of the Reo philosophy in the domain of container orchestration. It is meant as a proof of concept and not nearly as rich as Reo. In particular, it supports only one channel, resembling an HTTP post request; it assumes that each container has exactly one input and one output port; and it cannot be used to construct complex protocols that involve synchronization. The intended use case for Royo is defining orchestrations in which data flows asynchronously through a DAG of containers. An advantage of Royo is that no external coordinator is needed.
 
-Royo assumes certain container primitives, which are declaratively linked together in a `.royo` specification. The linking is performed by `composer.py`, which generates a target folder containing Docker images and a `docker-compose.yaml` that can be run in the usual way. We explain primitives, `.royo` files and `composer.py` in turn.
+Royo assumes certain container primitives, which are declaratively linked together in a `.royo` specification. The linking is performed by `composer.py`, which generates a target folder containing Docker images and a `docker-compose.yaml` file that can be executed in the usual way. We explain primitives, `.royo` files and `composer.py` in turn.
 
 ### Primitives
 
 Royo relies on the existence of Docker images which are considered primitives. For purposes of demonstration, this repository contains six such Docker images in `docker_images`:
-- `doubler`: doubles an integer from its input, puts it on output
-- `forwarder`: takes an integer from its input, puts it on output
-- `one_generator`: repeatedly generates a 1 and puts it on output
-- `paritychecker`: tests whether an integer on input is even, puts result on output
-- `reporter`: takes a JSON from input, prints its contents to standard output
-- `rng`: repeatedly generates a random number and puts it on output
+- `doubler`: doubles an integer from its input, puts it on output;
+- `forwarder`: takes an integer from its input, puts it on output;
+- `one_generator`: repeatedly generates a 1 and puts it on output;
+- `paritychecker`: tests whether an integer on input is even, puts result on output;
+- `reporter`: takes a JSON from input, prints its contents to standard output; and
+- `rng`: repeatedly generates a random number and puts it on output.
+
 Note that all data are wrapped in JSON objects.
 
 `rng` is a Bash script; the other images are Ruby scripts. The scripts use macros
-- `@ROYO_GET x` to wait for a JSON object on its input and bind it to variable `x`
-- `@ROYO_PUT x` to put a JSON object on its output
+- `@ROYO_GET x` to wait for a JSON object on its input and bind it to variable `x`; and
+- `@ROYO_PUT x` to put a JSON object on its output.
+
 These macros are ultimately preprocessed by the composer `composer.py`, which injects the required communication code into each container as required by `.royo` specification
 
 ### `.royo` specification
@@ -78,6 +80,14 @@ This declares a complex class `quadrupler`. It has two doublers living inside it
 
 Complex classes can be nested.
 
-Complex classes disappear at runtime. If the above is instantiated as a quadrupler `q1`, then `doubler` containers `q1.d1` and `q1.d2` will exist at runtime. This naming convention of the proof of concept may cause clashes, so the user should be careful.
+Complex classes disappear at runtime. If the above is instantiated as a quadrupler `q1`, then `doubler` containers `q1.d1` and `q1.d2` will exist at runtime. This naming convention is very hacky and may cause clashes, so the user should be careful.
 
 ### Composing using `composer.py`
+
+File `composer.py` handles the actual preprocessing and linking. It can presently handle only Ruby and Bash script primitives, and it can only inject linking conditions for Ruby. It generates a target folder `target` containing a `docker-compose.yaml` file and all the required post-processed Docker images.
+
+It is very much a hacky script. Use with care.
+
+## Try it
+
+Run `python composer.py inflater.royo` in the root of the repository and inspect the contents of `target`. Run `docker-compose start` in `target` to start all containers.
