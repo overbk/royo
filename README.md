@@ -42,7 +42,7 @@ Note that all data are wrapped in JSON objects.
 
 `rng` is a Bash script; the other images are Ruby scripts. The scripts use macros
 - `@ROYO_GET x` to wait for a JSON object on its input and bind it to variable `x`; and
-- `@ROYO_PUT x` to put a JSON object on its output.
+- `@ROYO_PUT x` to put JSON object `x` on its output.
 
 These macros are ultimately preprocessed by the composer `composer.py`, which injects the required communication code into each container as required by `.royo` specification
 
@@ -84,9 +84,26 @@ Complex classes disappear at runtime. If the above is instantiated as a quadrupl
 
 ### Composing using `composer.py`
 
-File `composer.py` handles the actual preprocessing and linking. It can presently handle only Ruby and Bash script primitives, and it can only inject linking conditions for Ruby. It generates a target folder `target` containing a `docker-compose.yaml` file and all the required post-processed Docker images.
+File `composer.py` handles the actual preprocessing and linking. It generates a target folder `target` containing a `docker-compose.yaml` file and all the required post-processed Docker images.
 
-It is very much a hacky script. Use with care.
+It can presently handle only Ruby and Bash script primitives, and it can only inject linking conditions for Ruby. For instance, a `@ROYO_PUT` of JSON object `royo_json` in a Ruby file is replaced by:
+
+```ruby
+dests = ENV['DESTS'].split(',')
+conds = ENV['CONDS'].split(',').map{|s| s.gsub(/@ROYO_JSON/, "royo_json")}
+conds = conds.map{|s| if s.strip == "True" then "true" else s end}
+dests.zip(conds).each{|dest, cond|
+  if eval(cond) then
+    HTTParty.post("http://" + dest, body: royo_json, :headers => {'Content-Type'=>'application/json'})
+  end
+}
+
+200
+```
+
+The `DESTS` and `CONDS` environment variables are container-specific and set in `docker-compose.yaml`. Their values are derived from the Royo specification.
+
+It is very much a write only script. Use with care.
 
 ## Try it
 
