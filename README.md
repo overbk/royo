@@ -48,7 +48,7 @@ These macros are ultimately preprocessed by the composer `composer.py`, which in
 
 ### `.royo` specification
 
-The top-level dataflow specification is defined in a `.royo` file. We informally discuss some of its features, using `inflater.royo` as our leading example.
+The top-level dataflow specification is defined in a `.royo` file.
 
 #### Instantiation
 
@@ -103,8 +103,8 @@ dests.zip(conds).each{|dest, cond|
 
 The `DESTS` and `CONDS` environment variables are container-specific and set in `docker-compose.yaml`. Their values are derived from the Royo specification.
 
-It is very much a write only script. Use with care.
+`composer.py` is very much a write only script. Use with care.
 
 ## Try it
 
-Run `python composer.py inflater.royo` in the root of the repository and inspect the contents of `target`. Run `docker-compose start` in `target` to start all containers.
+Run `python composer.py inflater.royo` in the root of the repository and inspect the generated contents in `target`. Run `docker-compose start` in `target` to start all containers.
