@@ -10,7 +10,7 @@ A system can be understood as a set of heterogenous components interacting accor
 - The components typically make assumptions about the environment and are therefore not properly modular. For instance, they may explicitly target other components with messages, implicitly assuming both that those components are present and that message-passing is the communication mechanism of the system.
 - The protocol is implicit. E.g., to understand that two components are alternatingly accessing a resource in a mutually exclusive fashion, various code fragments must be inspected -- each providing an incomplete view -- from which the protocol is reconstructed in the mind of the programmer. We might say that the protocol is defined 'from within', or 'endogenously'.
 
-Reo is a coordination language that addresses these issues. A component may only interact with ports that exist at its boundary. Then the protocol is defined 'from without' or 'exogenously' as a Reo circuit. The protocol can now be more easily comprehended, and it can be reused and verified. Components are also more modular, since they no longer depend on their environment.
+Reo is a coordination language that addresses these issues. A component may only interact with ports that exist at its boundary. Then the protocol is defined 'from without' or 'exogenously' as a Reo circuit that is connected to the components' ports. The protocol can now be more easily comprehended, and it can be reused and verified. Components are also more modular, since they no longer depend on their environment.
 
 Tools exist that turn Reo protocol specifications (e.g., 'A moves a datum to B') into executable code (e.g., socket communication for a particular language).
 
