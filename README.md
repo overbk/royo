@@ -14,7 +14,7 @@ Reo is a coordination language that addresses these issues. A component may only
 
 Tools exist that turn Reo protocol specifications (e.g., 'A moves a datum to B') into executable code (e.g., socket communication for a particular language).
 
-A better and more comprehensive introduction to Reo (with plenty of visualizations) is available at [the Reo website](http://reo.project.cwi.nl/v2/).
+A better and more comprehensive introduction to Reo (with plenty of visualizations) is available at [an archived version of the Reo website](https://web.archive.org/web/20211206075245/http://reo.project.cwi.nl/v2/).
 
  ### Docker Compose
 
